@@ -1,5 +1,72 @@
-appbundler
+appbundler-openjdk
 =============
+
+A fork of [TheInfiniteKind/appbundler](https://github.com/TheInfiniteKind/appbundler) with fixes to support bundling OpenJDK JDK/JREs with mac app bundles.
+
+To bundle a JRE, you'll want to create your own jre with `jlink`.  Here's a great online utility to help you with the command line options: [EasyJRE](https://justinmahar.github.io/easyjre/?path=/story/tools--easy-jre-story).
+
+Example CLI to prepare a JRE with JDK 22:
+
+```bash
+# Example $JAVA_HOME: /opt/java/jdk-22.0.1/Contents/Home
+
+% export PATH=$JAVA_HOME/bin:$PATH
+% cd $JAVA_HOME
+% jlink --output jre --compress=2 --no-header-files --no-man-pages --module-path jmods --add-modules java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto
+```
+
+Example ANT build.xml snippet to prepare a JRE for your application:
+
+```xml
+<link 
+  destDir="${basedir}/build/jre"
+  compress="zip"
+  includeHeaders="false"
+  includeManPages="false"
+  modulepath="${env.JAVA_HOME}/jmods"
+  modules="java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto"
+/>
+```
+
+Example ANT build.xml snippet to bundle the JRE:
+
+```xml
+<bundleapp
+  classpathref="runclasspathref"
+  jvmrequired="${jvm.version}"
+  minimumsystemversion="${mac.version}"
+  outputdirectory="${basedir}/build"
+  executablename="${package.name}.launcher"
+  name="${application.name}"
+  displayname="${application.name}.launcher"
+  version="${revision}"
+  shortversion="${application.version}"
+  identifier="${package.identifier}"
+  mainclassname="${main.class}"
+  icon="${icons.path}/${bundle.icns}"
+  copyright="${tstamp.year} ${package.company}"
+  applicationcategory="${mac.application.category}"
+  highresolutioncapable="true"
+  supportsautomaticgraphicsswitching="true">
+  
+  <!-- Important for M1+ macs -->
+  <arch name="arm64"/>
+  
+  <runtime dir="${basedir}/build/jre/Contents/Home"/>
+  <!-- Workaround as com.apple.mrj.application.apple.menu.about.name property may no longer work -->
+  <option value="-Xdock:name=${bundle.name}"/>
+  <option value="-Dcom.apple.mrj.application.apple.menu.about.name=${bundle.name}"/>
+
+  <option value="-Dapple.laf.useScreenMenuBar=true"/>
+  <option value="-Dapple.awt.application.name=${application.name}"/>
+</bundleapp>
+
+```
+
+
+Original README:
+======
+
 
 A fork of the [Java Application Bundler](https://svn.java.net/svn/appbundler~svn) 
 with the following changes:

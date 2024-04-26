@@ -10,3 +10,5 @@ appbundler/bin/
 Build/
 
 .DS_Store
+.idea/
+*.iml

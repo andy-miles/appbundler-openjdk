@@ -54,6 +54,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -540,7 +541,7 @@ public class AppBundlerTask extends Task {
         if (classPathRef != null) {
           org.apache.tools.ant.types.Path classpath =
             (org.apache.tools.ant.types.Path) classPathRef.getReferencedObject(getProject());
-          Iterator iter = classpath.iterator();
+          Iterator<Resource> iter = classpath.iterator();
           while (iter.hasNext()) {
             Object resource = iter.next();
             if (resource instanceof FileResource) {

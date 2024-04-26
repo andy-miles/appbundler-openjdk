@@ -53,13 +53,17 @@ public class Runtime extends FileSet {
         
         if (isJDK) {
             appendIncludes(new String[] {
+                    "jre/bin/",
                     "jre/lib/",
+                    "jre/legal/",
                     "jreCOPYRIGHT",
                     "jre/LICENSE",
                     "jre/README",
                     "jre/THIRDPARTYLICENSEREADME-JAVAFX.txt",
                     "jre/THIRDPARTYLICENSEREADME.txt",
-                    "jre/Welcome.html"
+                    "jre/Welcome.html",
+                    "jre/release"
+
             });
             appendExcludes(new String[] {
                     "jre/lib/deploy/",
@@ -72,14 +76,17 @@ public class Runtime extends FileSet {
                 });
         } else {
             appendIncludes(new String[] {
+                    "bin/",
                     "lib/",
                     "conf/",
+                    "legal/",
                     "COPYRIGHT",
                     "LICENSE",
                     "README",
                     "THIRDPARTYLICENSEREADME-JAVAFX.txt",
                     "THIRDPARTYLICENSEREADME.txt",
-                    "Welcome.html"
+                    "Welcome.html",
+                    "release"
             });
         }
     }
